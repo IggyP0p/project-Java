@@ -13,12 +13,12 @@ public class ContaCorrente{
     
     
     public double executarOperacao(Operacao opr) {
-    valor = valor + opr.valor;
-    return valor;
+        valor = valor + opr.operar();
+        return valor;
     }
     
     public double getSaldo() {
-    return valor;
+        return valor;
     }
     
-    }
+}
