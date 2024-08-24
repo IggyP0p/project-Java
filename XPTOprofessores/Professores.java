@@ -8,75 +8,45 @@ public class Professores
     public String endereco;
     public Dependente dependente;
 
-    static int count;
-    public static Professores [] p = new Professores[5];
-    public static Professores [] erro = new Professores[5];
+    public static int count;
+    public static int countErro;
+    public static String erro[] = new String[5];
+    private static Professores [] p = new Professores[5];
+    
 
-    public void incluirProfessor(Professores prof) throws ProfessorLimiteException, ProfessorExistenteException
+    public void incluirProfessor( String nome, String cpf, String rg, String endereco, String sexo, int idade) throws ProfessorLimiteException
     {
         if(count < 4)
         {
-            if(ProfessorExistente(prof))
-            {
-                if(p[count] == null)
-                {
-                    p[count] = prof;
-                    p[count].nome = prof.nome;
-                    p[count].cpf = prof.cpf;
-                    p[count].rg = prof.rg;
-                    p[count].endereco = prof.endereco;
-                    p[count].idade = prof.idade;
-                    p[count].sexo = prof.sexo;
-
-
-                    count++;
-                } else
-                {
-                    count++;
-                    p[count] = prof;
-                    p[count].nome = prof.nome;
-                    p[count].cpf = prof.cpf;
-                    p[count].rg = prof.rg;
-                    p[count].endereco = prof.endereco;
-                    p[count].idade = prof.idade;
-                    p[count].sexo = prof.sexo;
-                }
-            }else
-            {
-                ProfessorExistenteException e2 = new ProfessorExistenteException("ERRO: PROFESSOR JA EXISTENTE");
-                throw e2;
-            }
+            p[count] = new Professores();
+            p[count].nome = nome;
+            p[count].sexo = sexo;
+            p[count].idade = idade;
+            p[count].cpf = cpf;
+            p[count].rg = rg;
+            p[count].endereco = endereco;
+            count++;
 
         } else 
         {
-            for(int i=0; i<count; i++)
-                {
-                    if(p[i] == null)
-                    {
-                        count = i;
-                        p[count] = prof;
-                        p[count].nome = prof.nome;
-                        p[count].cpf = prof.cpf;
-                        p[count].rg = prof.rg;
-                        p[count].endereco = prof.endereco;
-                        p[count].idade = prof.idade;
-                        p[count].sexo = prof.sexo;
-                        return;
-                    }
-                }
             ProfessorLimiteException e = new ProfessorLimiteException("ERRO: LIMITE DE PROFESSORES ATINGIDO");
             throw e;
+
         }
     }
 
-    public boolean ProfessorExistente(Professores prof)
+    public boolean ProfessorExistente(String cpf) throws ProfessorExistenteException
     {
         for(int i=0; i<count; i++)
         {
-            if(p[i] == prof)
+            
+            if(p[i].cpf.equals(cpf))
             {
-                return false;
-            } 
+                ProfessorExistenteException e2 = new ProfessorExistenteException("ERRO: PROFESSOR JA EXISTENTE");
+                throw e2;
+
+            }
+            
         }
 
         return true;
@@ -108,7 +78,9 @@ public class Professores
 
     public void pesquisarProfessor(String cpf) throws ProfessorNaoEncontradoException
     {
-        for(int i=0; i<count; i++)
+        int i=0;
+
+        while(i != count)
         {
             if(p[i].cpf.equals(cpf))
             {
@@ -121,51 +93,73 @@ public class Professores
                     System.out.println("--------------------\nNão possui dependente");
                 }
 
-            } else 
-            {
-                ProfessorNaoEncontradoException e4 = new ProfessorNaoEncontradoException("ERRO: Professor não encontrado");
-                throw e4;
-            }
+                return;
+            } 
+            
+            i++;
         }
+
+        ProfessorNaoEncontradoException e4 = new ProfessorNaoEncontradoException("ERRO: Professor não encontrado");
+        throw e4;
     }
 
-    public void incluirDependente(Professores prof, String nome, int idade, String sexo)
+    public void incluirDependente(String cpf, String nome, int idade, String sexo)
     {
-        prof.dependente = new Dependente();
-        prof.dependente.nome = nome;
-        prof.dependente.idade = idade;
-        prof.dependente.sexo = sexo;
+        for(int i=0; i<count; i++)
+        {
+            if(p[i].cpf.equals(cpf))
+            {
+                p[i].dependente = new Dependente();
+                p[i].dependente.nome = nome;
+                p[i].dependente.idade = idade;
+                p[i].dependente.sexo = sexo;
+            }
+        }
+        
     }
     
+    public void armazenaErro(String message)
+    {
+        erro[countErro] = message;
+        countErro++;
+    }
+
+    public void ImprimirErros()
+    {
+        for(int i=0; i<countErro; i++)
+        {
+            System.out.println(erro[i]);
+        }
+    }
     
     public void setNome(String nome)
     {
-        this.nome = nome;
+        p[count].nome = nome;
     }
 
     public void setEndereco(String endereco)
     {
-        this.endereco = endereco;
+        p[count].endereco = endereco;
     }
 
     public void setIdade(int idade)
     {
-        this.idade = idade;
+        p[count].idade = idade;
     }
 
     public void setSexo(String sexo)
     {
-        this.sexo = sexo;
+        p[count].sexo = sexo;
     }
 
     public void setCpf(String cpf)
     {
-        this.cpf = cpf;
+        p[count].cpf = cpf;
     }
 
     public void setRG(String rg)
     {
-        this.rg = rg;
+        p[count].rg = rg;
     }
 
 }
